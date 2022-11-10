@@ -1,1 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <title>SUNRAIN</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource"></script>
+  </head>
+  <div id="sunrain">
+    <!-- title of my app -->
+
+    <h1>SUNRAIN</h1>
+  </div>
+  <br />
+  <div id="app">
+    <div class="x">
+      <input
+        type="text"
+        v-model="message"
+        placeholder="Search.
+.
+.
+.
+."
+        @keypress="retrieve"
+      />
+    </div>
+
+    <br />
+
+    <!-- This div will only be executed after the value of weather is fetched -->
+
+    <div v-if="typeof weather.list != 'undefined'">
+      <div class="current">
+        <!-- Display current weather, rainCheck, ClothsType -->
+
+        <div>City- {{ weather.city.name }},{{ weather.city.country }}</div>
+
+        <div>Current Temperature- {{weather.list[0] .main.temp}}°C</div>
+
+        <div>Packing- {{weather.checkRain}}</div>
+
+        <div>Type of Weather- {{weather.clothes}}</div>
+
+        <div v-if="maskCheck != 'Error'">Mask Check: {{maskCheck}}</div>
+
+        <button onclick="print()" id="pic">how mars is looking recently</button>
+      </div>
+
+      <!-- check if mars photo has been fetched and display it -->
+
+      <div v-if="typeof mars.photos != 'undefined'">
+        <img
+          :src="mars.photos[0]
+.img_src"
+          id="mars"
+        />
+      </div>
+
+      <!-- display the summary of weather in next 4 days in table format -->
+
+      <!-- vue-for is used to print the data -->
+
+      <div class="table">
+        <h2>Summary</h2>
+
+        <table style="width: 100%; border: 1px solid black">
+          <tr>
+            <th>Dates</th>
+
+            <th v-for="date in weather.list.slice(0,8)">{{date.dt_txt}}</th>
+          </tr>
+
+          <tr>
+            <th>Temperature</th>
+
+            <td v-for="temperature in weather.list.slice(0,8)">
+              {{Math.round(temperature.main.temp) }}
+            </td>
+          </tr>
+
+          <tr>
+            <th>Windspeed</th>
+
+            <td v-for="windSpeed in weather.list.slice(0,8)">
+              {{Math.round(windSpeed.wind.speed) }}
+            </td>
+          </tr>
+
+          <tr>
+            <th>Rainfall</th>
+
+            <td v-for="level in weather.list.slice(0,8)">
+              <!-- {{level.rain}} -->
+
+              <p
+                v-if="level.weather[0]
+.main === 'Rain'"
+              >
+                {{level.rain["3h"] }}
+              </p>
+
+              <p v-else>0</p>
+            </td>
+          </tr>
+        </table>
+
+        <table style="width: 100%; border: 1px solid black">
+          <tr>
+            <th>Condition</th>
+
+            <th v-for="date in weather.list.slice(8,16)">{{date.dt_txt}}</th>
+          </tr>
+
+          <tr>
+            <th>Temperature</th>
+
+            <td v-for="temperature in weather.list.slice(8,16)">
+              {{Math.round(temperature.main.temp) }}
+            </td>
+          </tr>
+
+          <tr>
+            <th>Windspeed</th>
+
+            <td v-for="windSpeed in weather.list.slice(8,16)">
+              {{Math.round(windSpeed.wind.speed) }}
+            </td>
+          </tr>
+
+          <tr>
+            <th>Rainfall Level</th>
+
+            <td v-for="level in weather.list.slice(8,16)">
+              <p
+                v-if="level.weather[0]
+.main === 'Rain'"
+              >
+                {{level.rain["3h"] }}
+              </p>
+
+              <p v-else>0</p>
+            </td>
+          </tr>
+        </table>
+
+        <table style="width: 100%; border: 1px solid black">
+          <tr>
+            <th>Condition</th>
+
+            <th v-for="date in weather.list.slice(16,24)">{{date.dt_txt}}</th>
+          </tr>
+
+          <tr>
+            <th>Temperature</th>
+
+            <td v-for="temperature in weather.list.slice(16,24)">
+              {{Math.round(temperature.main.temp) }}
+            </td>
+          </tr>
+
+          <tr>
+            <th>Windspeed</th>
+
+            <td v-for="windSpeed in weather.list.slice(16,24)">
+              {{Math.round(windSpeed.wind.speed) }}
+            </td>
+          </tr>
+
+          <tr>
+            <th>Rainfall Level</th>
+
+            <td v-for="level in weather.list.slice(16,24)">
+              <p
+                v-if="level.weather[0]
+.main === 'Rain'"
+              >
+                {{level.rain["3h"] }}
+              </p>
+
+              <p v-else>0</p>
+            </td>
+          </tr>
+        </table>
+
+        <table style="width: 100%; border: 1px solid black">
+          <tr>
+            <th>Condition</th>
+
+            <th v-for="date in weather.list.slice(24,32)">{{date.dt_txt}}</th>
+          </tr>
+
+          <tr>
+            <th>Temperature</th>
+
+            <td v-for="temperature in weather.list.slice(24,32)">
+              {{Math.round(temperature.main.temp) }}
+            </td>
+          </tr>
+
+          <tr>
+            <th>Windspeed</th>
+
+            <td v-for="windSpeed in weather.list.slice(24,32)">
+              {{Math.round(windSpeed.wind.speed) }}
+            </td>
+          </tr>
+
+          <tr>
+            <th>Rainfall Level</th>
+
+            <td v-for="level in weather.list.slice(24,32)">
+              <!-- {{level.rain}} -->
+
+              <p
+                v-if="level.weather[0]
+.main === 'Rain'"
+              >
+                {{level.rain["3h"] }}
+              </p>
+
+              <p v-else>0</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script>
+    // create a new vue object, declare variables, and define functions.
+
+    var app = new Vue({
+      el: "#app",
+
+      data: {
+        message: "",
+
+        api_key: "6d5dfc6af6bfaea7734db1cc1e1241f3",
+
+        weather: {},
+
+        maskCheck: "Error",
+
+        covidInfo: [2, 3],
+
+        mars: {},
+      },
+
+      methods: {
+        retrieve(e) {
+          // sends the request to server for weather details
+
+          if (e.key == "Enter") {
+            city = this.message.replaceAll(" ", "");
+
+            fetch("http://localhost:8008/" + city)
+              .then((res) => {
+                return res.json();
+              })
+
+              .then((result) => {
+                this.weather = result;
+
+                this.retrieveFunction();
+              });
+
+            // Thi swill fetch the mars rover picture from nasa api
+
+            fetch(
+              "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&page=2&api_key=x1Ms8YGOOg0XtHuR6sshSwqTR7gBB9qAcxohjc5p"
+            )
+              .then((result1) => {
+                return result1.json();
+              })
+
+              .then((result2) => {
+                this.mars = result2;
+              });
+          }
+        },
+
+        // It will take the latitude and longitude of city and fetch the pollution api
+
+        retrieveFunction() {
+          let lat = this.weather.city.coord.lat;
+
+          let lon = this.weather.city.coord.lon;
+
+          fetch(
+            "https://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=" +
+              lat +
+              "&lon=" +
+              lon +
+              "&APPID=6d5dfc6af6bfaea7734db1cc1e1241f3"
+          )
+            .then((res) => {
+              return res.json();
+            })
+
+            .then(this.setResults);
+        },
+
+        // check if the pm2_5 is above 10 and change the maskCheck to need a mask if required
+
+        setResults(results) {
+          let parameters = results;
+
+          let resultInfo = {
+            mask: false,
+          };
+
+          for (parameter in parameters.list) {
+            if (parameters.list[parameter].components.pm2_5 >= 10) {
+              resultInfo.mask = true;
+            }
+          }
+
+          if (resultInfo.mask == true) {
+            this.maskCheck = "need a mask #";
+          } else {
+            this.maskCheck = "do not need a mask";
+          }
+        },
+      },
+    });
+
+    // it is used to display the picture only when we clicked the button, DOM model is used in this function to present the working of DOM in
+    project;
+
+    function print() {
+      document.getElementById("mars").style.display = "block";
+
+      document.getElementById("pic").style.display = "none";
+    }
+  </script>
+</html>
+<!-- Stytling of application -->
+<style>
+  #sunrain {
+    text-align: center;
+
+    margin-top: 7%;
+
+    font-family: cursive;
+
+    color: blueviolet;
+  }
+  body {
+    background-color: bisque;
+  }
+  #app {
+    text-align: center;
+
+    line-height: 200%;
+
+    color: wheat;
+
+    text-indent: 2%;
+  }
+  input {
+    border-radius: 15px;
+
+    padding: 10px 20%;
+
+    font-family: cursive;
+
+    color: blueviolet;
+
+    background-color: whitesmoke;
+  }
+  h2 {
+    color: black;
+  }
+  .current {
+    align-items: center;
+
+    margin: 0% 35%;
+
+    border-radius: 10px;
+
+    padding: 2%;
+
+    color: black;
+  }
+  table > tr > td {
+    text-align: center;
+  }
+</style>
+<style>
+  table,
+  th,
+  td {
+    border: 3px solid black;
+
+    border-collapse: collapse;
+
+    color: black;
+  }
+  th,
+  td {
+    padding: 5px;
+
+    text-align: left;
+
+    color: black;
+  }
+  #mars {
+    display: none;
+
+    width: 70%;
+
+    height: 600px;
+
+    margin: 0 15%;
+
+    border: none;
+
+    background-color: yellowgreen;
+  }
+  .table {
+    width: 70%;
+
+    margin: 15%;
+  }
+  table {
+    margin: 5% 5%;
+  }
+</style>
 
